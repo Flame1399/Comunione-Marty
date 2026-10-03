@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  />
+
+  <meta name="theme-color" content="#fff8ec" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta
+    name="apple-mobile-web-app-title"
+    content="La mia comunione"
+  />
+
+  <title>La mia comunione</title>
+
+  <style>
+    :root {
+      --colore-sfondo: #fff8ec;
+      --colore-crema: #fffdf8;
+      --colore-principale: #b88746;
+      --colore-principale-scuro: #8f632e;
+      --colore-secondario: #f4dfbd;
+      --colore-testo: #493827;
+      --colore-bianco: #ffffff;
+      --colore-verde: #87a878;
+      --ombra: 0 12px 30px rgba(95, 64, 27, 0.13);
+      --raggio: 24px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-x: hidden;
+      color: var(--colore-testo);
+      background:
+        radial-gradient(circle at top left, #fffdf8 0, transparent 30%),
+        linear-gradient(180deg, #fff8ec 0%, #f9edd9 100%);
+      font-family: Georgia, "Times New Roman", serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button,
+    a,
+    input {
+      font: inherit;
+    }
+
+    button,
+    a {
+      touch-action: manipulation;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    img,
+    svg,
+    canvas {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .pagina {
+      width: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding:
+        max(20px, env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        max(32px, env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
+    }
+
+    .contenitore {
+      width: 100%;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      min-height: min(680px, 86vh);
+      min-height: min(680px, 86dvh);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 20px;
+      text-align: center;
+      border: 1px solid rgba(184, 135, 70, 0.2);
+      border-radius: 32px;
+      background:
+        linear-gradient(
+          rgba(255, 253, 248, 0.78),
+          rgba(255, 248, 236, 0.92)
+        ),
+        radial-gradient(circle at 20% 20%, #f4dfbd 0, transparent 28%);
+      box-shadow: var(--ombra);
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      content: "";
+      width: 120px;
+      height: 120px;
+      border: 1px solid rgba(184, 135, 70, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      top: -45px;
+      left: -45px;
+    }
+
+    .hero::after {
+      right: -45px;
+      bottom: -45px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .decorazione {
+      margin-bottom: 16px;
+      color: var(--colore-principale);
+      font-size: clamp(2rem, 9vw, 4rem);
+      line-height: 1;
+    }
+
+    .soprattitolo {
+      margin: 0 0 10px;
+      color: var(--colore-principale-scuro);
+      font-size: clamp(0.85rem, 3vw, 1.1rem);
+      font-weight: bold;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin-top: 0;
+      color: var(--colore-principale-scuro);
+    }
+
+    h1 {
+      margin-bottom: 18px;
+      font-size: clamp(2.3rem, 10vw, 5.5rem);
+      line-height: 0.98;
+      font-weight: normal;
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.8rem, 7vw, 3rem);
+      font-weight: normal;
+    }
+
+    h3 {
+      margin-bottom: 8px;
+      font-size: clamp(1.2rem, 5vw, 1.6rem);
+    }
+
+    p {
+      margin: 0 0 16px;
+      font-size: clamp(1rem, 3.8vw, 1.2rem);
+      line-height: 1.65;
+    }
+
+    .sottotitolo {
+      max-width: 650px;
+      margin: 0 auto 28px;
+      font-size: clamp(1.05rem, 4vw, 1.35rem);
+    }
+
+    .pulsanti {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .pulsante {
+      min-width: 48px;
+      min-height: 48px;
+      padding: 13px 20px;
+      border-radius: 999px;
+      color: var(--colore-bianco);
+      background: var(--colore-principale);
+      box-shadow: 0 8px 18px rgba(143, 99, 46, 0.2);
+      font-size: 1rem;
+      font-weight: bold;
+      transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .pulsante:hover,
+    .pulsante:focus-visible {
+      background: var(--colore-principale-scuro);
+      transform: translateY(-2px);
+    }
+
+    .pulsante.secondario {
+      color: var(--colore-principale-scuro);
+      background: var(--colore-secondario);
+    }
+
+    .sezione {
+      margin-top: 28px;
+      padding: clamp(24px, 6vw, 48px);
+      text-align: center;
+      border: 1px solid rgba(184, 135, 70, 0.18);
+      border-radius: var(--raggio);
+      background: rgba(255, 253, 248, 0.82);
+      box-shadow: var(--ombra);
+    }
+
+    .sezione-introduzione {
+      max-width: 680px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .griglia {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .scheda {
+      padding: 22px 16px;
+      border-radius: 20px;
+      background: var(--colore-crema);
+      box-shadow: 0 5px 18px rgba(95, 64, 27, 0.08);
+    }
+
+    .scheda-icona {
+      margin-bottom: 8px;
+      font-size: 2rem;
+    }
+
+    .scheda p {
+      margin-bottom: 0;
+      font-size: 1rem;
+    }
+
+    .gioco-area {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      height: min(420px, 70vh);
+      height: min(420px, 70dvh);
+      min-height: 280px;
+      margin: 24px auto 0;
+      overflow: hidden;
+      border: 2px solid var(--colore-secondario);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 25% 25%, #fffdf8 0, transparent 22%),
+        linear-gradient(145deg, #f7e8ce, #fffaf2);
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .stella {
+      position: absolute;
+      display: grid;
+      width: 58px;
+      height: 58px;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--colore-principale);
+      box-shadow: 0 8px 15px rgba(143, 99, 46, 0.28);
+      font-size: 1.65rem;
+      transform: translate(-50%, -50%);
+      animation: comparsa 0.3s ease-out;
+    }
+
+    @keyframes comparsa {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+      }
+
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+
+    .punteggio {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: var(--colore-principale-scuro);
+      background: var(--colore-secondario);
+      font-weight: bold;
+    }
+
+    .dedica {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255, 253, 248, 0.94), rgba(255, 253, 248, 0.94)),
+        radial-gradient(circle at 50% 0, #f4dfbd, transparent 45%);
+    }
+
+    .dedica::before,
+    .dedica::after {
+      position: absolute;
+      color: rgba(184, 135, 70, 0.25);
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .dedica::before {
+      top: 16px;
+      left: 20px;
+      content: "“";
+    }
+
+    .dedica::after {
+      right: 20px;
+      bottom: 0;
+      content: "”";
+    }
+
+    .testo-dedica {
+      position: relative;
+      z-index: 1;
+      max-width: 670px;
+      margin: 0 auto 20px;
+      font-size: clamp(1.2rem, 5vw, 1.75rem);
+      font-style: italic;
+      line-height: 1.6;
+    }
+
+    .firma {
+      position: relative;
+      z-index: 1;
+      color: var(--colore-principale-scuro);
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      font-weight: bold;
+    }
+
+    .footer {
+      padding: 28px 12px 12px;
+      text-align: center;
+      color: var(--colore-principale-scuro);
+      font-size: 0.95rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    :focus-visible {
+      outline: 3px solid #5d8ec7;
+      outline-offset: 3px;
+    }
+
+    @media (max-width: 700px) {
+      .pagina {
+        padding-top: max(12px, env(safe-area-inset-top));
+      }
+
+      .hero {
+        min-height: 620px;
+        border-radius: 24px;
+      }
+
+      .griglia {
+        grid-template-columns: 1fr;
+      }
+
+      .scheda {
+        display: grid;
+        grid-template-columns: 54px 1fr;
+        align-items: center;
+        gap: 10px;
+        text-align: left;
+      }
+
+      .scheda-icona {
+        grid-row: span 2;
+        margin: 0;
+        font-size: 2.2rem;
+        text-align: center;
+      }
+
+      .scheda h3 {
+        margin-bottom: 0;
+      }
+
+      .scheda p {
+        grid-column: 2;
+      }
+
+      .pulsante {
+        width: 100%;
+        max-width: 320px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .sezione {
+        padding: 22px 15px;
+      }
+
+      .hero {
+        padding-right: 14px;
+        padding-left: 14px;
+      }
+
+      .gioco-area {
+        min-height: 250px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 600px) {
+      .hero {
+        min-height: 460px;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+
+      .decorazione {
+        font-size: 2.5rem;
+      }
+
+      h1 {
+        font-size: clamp(2rem, 8vw, 4rem);
+      }
+
+      .gioco-area {
+        height: 280px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="pagina">
+    <div class="contenitore">
+
+      <section class="hero" aria-labelledby="titolo-principale">
+        <div class="hero-content">
+          <div class="decorazione" aria-hidden="true">✦</div>
+
+          <p class="soprattitolo">Un giorno speciale</p>
+
+          <h1 id="titolo-principale">
+            La mia<br />
+            comunione
+          </h1>
+
+          <p class="sottotitolo">
+            Benvenuti nella mia piccola sorpresa digitale.
+            Grazie per essere qui a festeggiare con me!
+          </p>
+
+          <div class="pulsanti">
+            <a class="pulsante" href="#scopri">
+              Scopri di più
+            </a>
+
+            <a class="pulsante secondario" href="#gioco">
+              Gioca con me
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="scopri"
+        class="sezione"
+        aria-labelledby="titolo-scopri"
+      >
+        <div class="sezione-introduzione">
+          <h2 id="titolo-scopri">Una giornata da ricordare</h2>
+
+          <p>
+            La mia comunione è un momento pieno di gioia, emozioni
+            e persone speciali. Grazie per aver scelto di condividere
+            questa giornata con me.
+          </p>
+        </div>
+
+        <div class="griglia">
+          <article class="scheda">
+            <div class="scheda-icona" aria-hidden="true">♡</div>
+            <h3>Affetto</h3>
+            <p>
+              Un giorno circondato dalle persone che amo.
+            </p>
+          </article>
+
+          <article class="scheda">
+            <div class="scheda-icona" aria-hidden="true">✦</div>
+            <h3>Gioia</h3>
+            <p>
+              Sorrisi, abbracci e tanti ricordi indimenticabili.
+            </p>
+          </article>
+
+          <article class="scheda">
+            <div class="scheda-icona" aria-hidden="true">☀</div>
+            <h3>Grazie</h3>
+            <p>
+              Grazie per essere parte di questa giornata speciale.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section
+        id="gioco"
+        class="sezione"
+        aria-labelledby="titolo-gioco"
+      >
+        <h2 id="titolo-gioco">Trova la stellina</h2>
+
+        <p>
+          Tocca la stellina più velocemente possibile!
+        </p>
+
+        <div
+          id="punteggio"
+          class="punteggio"
+          aria-live="polite"
+        >
+          Punti: 0
+        </div>
+
+        <div
+          id="gioco-area"
+          class="gioco-area"
+          role="application"
+          aria-label="Area del gioco Trova la stellina"
+        ></div>
+
+        <div class="pulsanti">
+          <button
+            id="avvia-gioco"
+            class="pulsante"
+            type="button"
+          >
+            Inizia il gioco
+          </button>
+
+          <button
+            id="azzera-gioco"
+            class="pulsante secondario"
+            type="button"
+          >
+            Azzera
+          </button>
+        </div>
+      </section>
+
+      <section
+        class="sezione dedica"
+        aria-labelledby="titolo-dedica"
+      >
+        <h2 id="titolo-dedica">Una dedica speciale</h2>
+
+        <p class="testo-dedica">
+          “Che questa giornata rimanga per sempre
+          nel cuore come un ricordo pieno di luce,
+          amore e felicità.”
+        </p>
+
+        <p class="firma">
+          Con affetto,<br />
+          Emy e Lulù
+        </p>
+      </section>
+
+      <footer class="footer">
+        Una giornata speciale da custodire nel cuore ♡
+      </footer>
+
+    </div>
+  </main>
+
+  <script>
+    "use strict";
+
+    const areaGioco = document.getElementById("gioco-area");
+    const pulsanteAvvia = document.getElementById("avvia-gioco");
+    const pulsanteAzzera = document.getElementById("azzera-gioco");
+    const punteggioElemento = document.getElementById("punteggio");
+
+    let punteggio = 0;
+    let giocoAttivo = false;
+    let timerGioco = null;
+
+    function aggiornaPunteggio() {
+      punteggioElemento.textContent = `Punti: ${punteggio}`;
+    }
+
+    function creaStellina() {
+      if (!giocoAttivo) {
+        return;
+      }
+
+      const stellinaPrecedente = areaGioco.querySelector(".stella");
+
+      if (stellinaPrecedente) {
+        stellinaPrecedente.remove();
+      }
+
+      const stellina = document.createElement("button");
+
+      stellina.type = "button";
+      stellina.className = "stella";
+      stellina.textContent = "✦";
+      stellina.setAttribute("aria-label", "Raccogli la stellina");
+
+      const margine = 40;
+      const larghezzaMassima = Math.max(
+        margine,
+        areaGioco.clientWidth - margine
+      );
+      const altezzaMassima = Math.max(
+        margine,
+        areaGioco.clientHeight - margine
+      );
+
+      const posizioneX =
+        margine + Math.random() * (larghezzaMassima - margine);
+
+      const posizioneY =
+        margine + Math.random() * (altezzaMassima - margine);
+
+      stellina.style.left = `${posizioneX}px`;
+      stellina.style.top = `${posizioneY}px`;
+
+      stellina.addEventListener("click", () => {
+        punteggio += 1;
+        aggiornaPunteggio();
+        creaStellina();
+      });
+
+      areaGioco.appendChild(stellina);
+    }
+
+    function avviaGioco() {
+      clearTimeout(timerGioco);
+
+      punteggio = 0;
+      giocoAttivo = true;
+      aggiornaPunteggio();
+      creaStellina();
+
+      timerGioco = setTimeout(() => {
+        giocoAttivo = false;
+
+        const stellina = areaGioco.querySelector(".stella");
+
+        if (stellina) {
+          stellina.remove();
+        }
+
+        alert(`Tempo terminato! Hai totalizzato ${punteggio} punti.`);
+      }, 30000);
+    }
+
+    function azzeraGioco() {
+      clearTimeout(timerGioco);
+
+      giocoAttivo = false;
+      punteggio = 0;
+      aggiornaPunteggio();
+
+      const stellina = areaGioco.querySelector(".stella");
+
+      if (stellina) {
+        stellina.remove();
+      }
+    }
+
+    pulsanteAvvia.addEventListener("click", avviaGioco);
+    pulsanteAzzera.addEventListener("click", azzeraGioco);
+
+    window.addEventListener("resize", () => {
+      if (giocoAttivo) {
+        creaStellina();
+      }
+    });
+
+    window.addEventListener("orientationchange", () => {
+      setTimeout(() => {
+        if (giocoAttivo) {
+          creaStellina();
+        }
+      }, 250);
+    });
+
+    aggiornaPunteggio();
+  </script>
+</body>
+</html>
