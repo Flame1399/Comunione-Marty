@@ -136,6 +136,7 @@ gap:10px;
 }
 
 .scheda-gioco{
+position:relative;
 min-width:0;
 min-height:185px;
 padding:15px 9px;
@@ -143,6 +144,23 @@ border:1px solid rgba(216,121,147,.16);
 border-radius:20px;
 text-align:center;
 background:linear-gradient(180deg,#fff,#fff8fa);
+}
+
+.scheda-gioco.completato{
+border-color:#8bbc8d;
+background:linear-gradient(180deg,#f4fbf4,#eef9ee);
+}
+
+.badge-completato{
+display:none;
+position:absolute;
+top:10px;
+right:10px;
+font-size:1.1rem;
+}
+
+.scheda-gioco.completato .badge-completato{
+display:block;
 }
 
 .icona-gioco{
@@ -309,7 +327,9 @@ background:#fff0f1;
 
 .risposta:disabled{opacity:1}
 
+/* NASCOSTA DI DEFAULT */
 .dedica{
+display:none;
 position:relative;
 overflow:hidden;
 margin-top:22px;
@@ -317,6 +337,12 @@ padding:32px 17px;
 color:white;
 text-align:center;
 background:linear-gradient(135deg,#c65376,#e99aae);
+animation:fadingIn 1.2s ease-in-out forwards;
+}
+
+@keyframes fadingIn {
+from { opacity: 0; transform: translateY(20px); }
+to { opacity: 1; transform: translateY(0); }
 }
 
 .dedica:before{
@@ -415,14 +441,14 @@ Scopri la sorpresa
 <h2>Un piccolo mondo di giochi</h2>
 
 <p class="introduzione">
-Martina, scegli un gioco e divertiti!
-Ogni sorriso rende questo giorno ancora più bello.
+Martina, completa i giochi per sbloccare il messaggio speciale per te!
 </p>
 
 
 <div class="griglia-giochi">
 
-<article class="scheda-gioco">
+<article class="scheda-gioco" id="scheda-memory">
+<span class="badge-completato">✅</span>
 <span class="icona-gioco">🃏</span>
 <h3>Trova le coppie</h3>
 <p>Scopri tutte le coppie di simboli speciali.</p>
@@ -432,7 +458,8 @@ Gioca
 </article>
 
 
-<article class="scheda-gioco">
+<article class="scheda-gioco" id="scheda-stella">
+<span class="badge-completato">✅</span>
 <span class="icona-gioco">⭐</span>
 <h3>Acchiappa la stella</h3>
 <p>Tocca la stella più volte che puoi in 15 secondi.</p>
@@ -442,7 +469,8 @@ Gioca
 </article>
 
 
-<article class="scheda-gioco">
+<article class="scheda-gioco" id="scheda-quiz">
+<span class="badge-completato">✅</span>
 <span class="icona-gioco">❓</span>
 <h3>Quiz della gioia</h3>
 <p>Rispondi a una domanda dolce e speciale.</p>
@@ -544,7 +572,8 @@ La noia
 </section>
 
 
-<section class="dedica">
+<!-- SEZIONE DEDICA FINALE -->
+<section class="dedica" id="sezione-dedica">
 
 <h2>Per te, Martina</h2>
 
@@ -584,10 +613,40 @@ document.addEventListener("DOMContentLoaded", function () {
   var bottoni = document.querySelectorAll("[data-gioco]");
   var chiudi = document.querySelectorAll(".chiudi-gioco");
 
+  // Tracciamento dei giochi completati
+  var giochiCompletati = {
+    memory: false,
+    stella: false,
+    quiz: false
+  };
+
   function chiudiTutti() {
     aree.forEach(function (a) {
       a.classList.remove("attiva");
     });
+  }
+
+  function controllaTuttiCompletati() {
+    if (giochiCompletati.memory && giochiCompletati.stella && giochiCompletati.quiz) {
+      var dedica = document.getElementById("sezione-dedica");
+      if (dedica && dedica.style.display !== "block") {
+        setTimeout(function () {
+          chiudiTutti();
+          dedica.style.display = "block";
+          creaCoriandoli();
+          setTimeout(function() {
+            dedica.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 300);
+        }, 1200);
+      }
+    }
+  }
+
+  function segnaCompletato(nomeGioco) {
+    giochiCompletati[nomeGioco] = true;
+    var scheda = document.getElementById("scheda-" + nomeGioco);
+    if (scheda) scheda.classList.add("completato");
+    controllaTuttiCompletati();
   }
 
   bottoni.forEach(function (b) {
@@ -680,6 +739,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (coppie === 4) {
             msgMemory.textContent = "Bravissima Martina! Hai trovato tutte le coppie! 🎉";
             creaCoriandoli();
+            segnaCompletato("memory");
           }
         } else {
           blocca = true;
@@ -762,7 +822,12 @@ document.addEventListener("DOMContentLoaded", function () {
         testo.textContent = "Tempo finito!";
         msgStella.textContent = "Hai acchiappato " + punti + (punti === 1 ? " stella! ⭐" : " stelle! ⭐");
 
-        if (punti >= 10) creaCoriandoli();
+        if (punti >= 5) {
+          creaCoriandoli();
+          segnaCompletato("stella");
+        } else {
+          msgStella.textContent += " Fai almeno 5 punti per completarlo!";
+        }
       }
     }, 1000);
   });
@@ -800,6 +865,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (corretta) {
         msgQuiz.textContent = "Esatto! L’affetto è sempre il regalo più bello. ♥";
         creaCoriandoli();
+        segnaCompletato("quiz");
       } else {
         this.classList.add("sbagliata");
         msgQuiz.textContent = "Quasi! La risposta giusta è: un sorriso e tanto affetto. ♥";
