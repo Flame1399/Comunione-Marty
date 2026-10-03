@@ -241,21 +241,39 @@ padding:0;
 border:0;
 border-radius:13px;
 cursor:pointer;
-color:transparent;
 background:linear-gradient(135deg,#eaa1b5,#c95c7b);
 box-shadow:0 3px 8px rgba(130,52,74,.2);
-font-size:clamp(1.3rem,8vw,2rem);
+display:flex;
+align-items:center;
+justify-content:center;
 touch-action:manipulation;
 }
 
+/* Stili specifici per i simboli testuali sul Memory */
+.carta .simbolo-carta{
+display:none;
+font-size:2rem;
+line-height:1;
+color:#bd496d;
+user-select:none;
+-webkit-user-select:none;
+}
+
 .carta.scoperta,.carta.trovata{
-color:#563f45;
 background:#fff4f6;
+}
+
+.carta.scoperta .simbolo-carta,.carta.trovata .simbolo-carta{
+display:inline-block;
 }
 
 .carta.trovata{
 border:2px solid #e8bd75;
 background:#fff9e8;
+}
+
+.carta.trovata .simbolo-carta{
+color:#c9a35e;
 }
 
 .stella{
@@ -662,8 +680,15 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
 
-  /* MEMORY */
-  var simboli = ["♥", "★", "✝", "🌸", "♥", "★", "✝", "🌸"];
+  /* MEMORY CON SIMBOLI TESTUALI COMPATIBILI IPHONE */
+  var simboliTesto = {
+    cuore: "♥",
+    stella: "★",
+    croce: "✝",
+    fiore: "✿"
+  };
+
+  var simboli = ["cuore", "stella", "croce", "fiore", "cuore", "stella", "croce", "fiore"];
   var carte = document.getElementById("carte-memory");
   var msgMemory = document.getElementById("messaggio-memory");
 
@@ -689,12 +714,17 @@ document.addEventListener("DOMContentLoaded", function () {
     msgMemory.textContent = "";
     carte.innerHTML = "";
 
-    mescola(simboli).forEach(function (simbolo) {
+    mescola(simboli).forEach(function (tipo) {
       var carta = document.createElement("button");
       carta.type = "button";
       carta.className = "carta";
-      carta.textContent = simbolo;
-      carta.setAttribute("data-simbolo", simbolo);
+      
+      var span = document.createElement("span");
+      span.className = "simbolo-carta";
+      span.textContent = simboliTesto[tipo];
+      
+      carta.appendChild(span);
+      carta.setAttribute("data-simbolo", tipo);
 
       carta.addEventListener("click", function () {
         if (
